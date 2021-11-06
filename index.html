@@ -7,8 +7,23 @@
 </head>
 <body>
     <input type="file" id="fileInput"><br>
+    Select a set:<br>
+    <select id="inventorySelect" size="8">
+        <option value="21226">21226 Art Project - Create Together</option>
+        <option value="31197">31197 Andy Warhol's Marilyn Monroe</option>
+        <option value="31198">31198 The Beatles</option>
+        <option value="31199">31199 Marvel Studios Iron Man</option>
+        <option value="31200">31200 Star Wars The Sith</option>
+        <option value="31201">31201 Harry Potter Hogwarts Crests</option>
+        <option value="31202">31202 Disney's Mickey Mouse</option>
+        <option value="31203">31203 World Map</option>
+    </select><br>
+    Mosaic Width: <input type="number" min="0" max="256" value="48" id="widthInput"><br>
+    Mosaic Height: <input type="number" min="0" max="256" value="48" id="heightInput"><br>
+    <button onclick="readData()">Construct Mosaic</button><br>
+    <div id="errorMessage"></div>
     <canvas id="pixelReaderCanvas", style="display: none;"></canvas>
-    <canvas id="outputCanvas" width="640" height="640"></canvas>
+    <canvas id="outputCanvas"></canvas>
     <script src="script.js"></script>
 </body>
 </html>
