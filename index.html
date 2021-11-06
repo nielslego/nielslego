@@ -20,10 +20,12 @@
     </select><br>
     Mosaic Width: <input type="number" min="0" max="256" value="48" id="widthInput"><br>
     Mosaic Height: <input type="number" min="0" max="256" value="48" id="heightInput"><br>
+    <input type="checkbox" id="generateTable">Generate table with BrickLink Color IDs<br>
     <button onclick="readData()">Construct Mosaic</button><br>
     <div id="errorMessage"></div>
     <canvas id="pixelReaderCanvas", style="display: none;"></canvas>
     <canvas id="outputCanvas"></canvas>
+    <table id="colorTable"></table>
     <script src="script.js"></script>
 </body>
 </html>

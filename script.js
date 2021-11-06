@@ -3,6 +3,7 @@ function readData() {
     settings.width = Number.parseInt(document.getElementById("widthInput").value);
     settings.height = Number.parseInt(document.getElementById("heightInput").value);
     settings.selectedInventory = document.getElementById("inventorySelect").value;
+    settings.generateTable = document.getElementById("generateTable").checked;
     if (!settings.selectedInventory) {
         errorMessage.innerHTML = "Please select a set"
         return;
@@ -47,7 +48,6 @@ function arrayDeepCopy(arr) {
 function constructMosaic() {
     const colorComparisons = [];
     const inventory = arrayDeepCopy(setInventories[settings.selectedInventory]);
-    console.log(inventory);
     const colorAmount = inventory.length;
     let partsTotal = 0;
     for (let i = 0; i < colorAmount; i++) {
@@ -95,12 +95,23 @@ function constructMosaic() {
         currentPartIndex = (inventory[partIndex][1] > 0 ? partIndex : 0);
         assignedParts++;
     }
+    const table = document.getElementById("colorTable");
+    colorTable.innerHTML = "";
     outputCanvas.width = 10 * settings.width;
     outputCanvas.height = 10 * settings.height;
     for (let i = 0; i < parts.length; i++) {
         let color = colorDefinitions[parts[i]][1];
         let x = i % settings.width;
         let y = Math.floor(i / settings.width);
+        if (x == 0) {
+            table.appendChild(document.createElement("tr"));
+        }
+        if (settings.generateTable) {
+            let td = document.createElement("td");
+            td.innerHTML = parts[i];
+            td.style.background = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            table.lastChild.appendChild(td);    
+        }
         outputCtx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
         outputCtx.fillRect(x * 10, y * 10, 10, 10);
     }
@@ -114,8 +125,10 @@ const outputCtx = outputCanvas.getContext("2d");
 let imageData;
 let settings = {
     width: 48,
-    height: 48
-}
+    height: 48,
+    selectedInventory: undefined,
+    generateTable: false
+};
 const setInventories = {
     "21226": [['11', 254], ['36', 148], ['110', 163], ['103', 119], ['104', 58], ['153', 127], ['63', 660], ['152', 317], ['34', 166], ['150', 281], ['4', 133], ['5', 190], ['88', 307], ['2', 241], ['1', 474], ['3', 299]],
     "31197": [['11', 629], ['104', 587], ['85', 131], ['47', 587], ['71', 46], ['156', 587], ['3', 587]],
@@ -180,9 +193,6 @@ const colorDefinitions = {
     "64": ["Chrome Green", [59, 178, 112]],
     "82": ["Chrome Pink", [169, 76, 141]],
     "122": ["Chrome Black", [26, 41, 51]],
-    "1001": ["Yellow", [244, 204, 46]],
-    "1009": ["Trans-Yellow", [201, 175, 0]],
-    "1008": ["Trans-Clear", [254, 254, 254]],
     "96": ["Very Light Orange", [242, 206, 154]],
     "93": ["Light Purple", [204, 97, 151]],
     "88": ["Reddish Brown", [87, 41, 17]],
@@ -198,7 +208,6 @@ const colorDefinitions = {
     "67": ["Metallic Silver", [164, 168, 179]],
     "70": ["Metallic Green", [136, 154, 94]],
     "65": ["Metallic Gold", [218, 171, 51]],
-    "1006": ["Black", [25, 39, 48]],
     "150": ["Medium Dark Flesh", [203, 111, 41]],
     "89": ["Dark Purple", [62, 53, 144]],
     "91": ["Dark Flesh", [123, 79, 57]],
@@ -231,9 +240,7 @@ const colorDefinitions = {
     "27": ["Rust", [178, 15, 3]],
     "103": ["Bright Light Yellow", [254, 239, 57]],
     "87": ["Sky Blue", [85, 189, 213]],
-    "1007": ["Black", [32, 32, 32]],
     "63": ["Dark Blue", [12, 49, 90]],
-    "1004": ["Blue", [0, 50, 177]],
     "80": ["Dark Green", [23, 69, 49]],
     "118": ["Glow In Dark Trans", [188, 197, 172]],
     "115": ["Pearl Gold", [203, 155, 42]],
@@ -243,29 +250,20 @@ const colorDefinitions = {
     "153": ["Dark Azure", [19, 151, 214]],
     "156": ["Medium Azure", [61, 193, 220]],
     "152": ["Light Aqua", [188, 219, 215]],
-    "1003": ["Red", [195, 0, 37]],
     "158": ["Yellowish Green", [222, 237, 164]],
     "155": ["Olive Green", [154, 153, 89]],
     "21": ["Chrome Gold", [186, 164, 60]],
     "58": ["Sand Red", [213, 116, 113]],
-    "1002": ["Orange", [207, 101, 15]],
     "94": ["Medium Dark Pink", [246, 132, 176]],
     "29": ["Earth Orange", [249, 155, 27]],
     "54": ["Sand Purple", [131, 93, 131]],
-    "1005": ["Light Gray", [192, 193, 192]],
     "48": ["Sand Green", [159, 187, 171]],
     "55": ["Sand Blue", [88, 112, 131]],
     "22": ["Chrome Silver", [223, 223, 223]],
-    "1013": ["Dark Blue", [0, 28, 103]],
-    "1011": ["Purple", [128, 0, 122]],
     "106": ["Fabuland Brown", [182, 123, 80]],
     "31": ["Medium Orange", [254, 166, 10]],
     "68": ["Dark Orange", [168, 84, 0]],
-    "1012": ["Lime", [214, 239, 0]],
-    "1014": ["Light Bluish Gray", [162, 161, 163]],
     "49": ["Very Light Gray", [229, 226, 217]],
-    "1015": ["Flat Silver", [136, 134, 135]],
-    "1000": ["White", [249, 249, 249]],
     "159": ["Glow In Dark White", [236, 236, 236]],
     "160": ["Fabuland Orange ", [214, 146, 61]],
     "161": ["Dark Yellow", [229, 182, 53]],
