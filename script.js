@@ -13,15 +13,23 @@ function readData() {
     reader.onload = e => {
         const img = new Image();
         img.src = e.target.result;
-        img.onload = function() {
+        img.onload = () => {
+            pixelReaderCanvas = document.createElement("canvas");
+            pixelReaderCtx = pixelReaderCanvas.getContext("2d");
             pixelReaderCanvas.width = img.width;
             pixelReaderCanvas.height = img.height;
             pixelReaderCtx.drawImage(img, 0, 0, settings.width, settings.height);
             imageData = pixelReaderCtx.getImageData(0, 0, settings.width, settings.height).data;
-            constructMosaic();
+            constructMosaic(imageData);
         }
     }
     reader.readAsDataURL(file);
+}
+function sleep(t, msg="") {
+    const startTime = Date.now();
+    while (startTime + t > Date.now()) {}
+    console.log(msg);
+    return;
 }
 function minIndex(arr) {
     index = 0;
@@ -45,7 +53,7 @@ function arrayDeepCopy(arr) {
     }
     return output;
 }
-function constructMosaic() {
+function constructMosaic(imageData) {
     const colorComparisons = [];
     const inventory = arrayDeepCopy(setInventories[settings.selectedInventory]);
     const colorAmount = inventory.length;
@@ -110,6 +118,7 @@ function constructMosaic() {
             let td = document.createElement("td");
             td.innerHTML = parts[i];
             td.style.background = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            td.style.color = (color[0] + color[1] + color[2]) < 350 ? "white" : "black";
             table.lastChild.appendChild(td);    
         }
         outputCtx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
@@ -118,11 +127,8 @@ function constructMosaic() {
     console.log(1 - score / (settings.width * settings.height * 3 * 255));
 }
 const errorMessage = document.getElementById("errorMessage");
-const pixelReaderCanvas = document.getElementById("pixelReaderCanvas");
-const pixelReaderCtx = pixelReaderCanvas.getContext("2d");
 const outputCanvas = document.getElementById("outputCanvas");
 const outputCtx = outputCanvas.getContext("2d");
-let imageData;
 let settings = {
     width: 48,
     height: 48,
